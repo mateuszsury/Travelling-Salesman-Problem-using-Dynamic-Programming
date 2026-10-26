@@ -64,11 +64,18 @@ def tsp_rand_results(start, end):
 
     return all_data
 
-# Zapisz wyniki do pliku txt
-results = tsp_rand_results(10, 21)
-with open("wyniki_tsp.txt", "w") as file:
-    for result in results:
-        file.write(f"data: {result['data']}\n")
-        file.write(f"programowanie dynamiczne ({result['end_time']:.3f}s):\n")
-        file.write(f"{result['cost']}\n")
-        file.write(' '.join(map(str, result['path'])) + "\n\n")
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Held-Karp TSP experiment")
+    parser.add_argument('--min-size', type=int, default=4)
+    parser.add_argument('--max-size', type=int, default=10)
+    args = parser.parse_args()
+    if not 2 <= args.min_size <= args.max_size <= 20:
+        parser.error('require 2 <= min-size <= max-size <= 20')
+    results = tsp_rand_results(args.min_size - 1, args.max_size)
+    with open('wyniki_tsp.txt', 'w') as output:
+        for result in results:
+            output.write(f"{result}\n")
+
+if __name__ == '__main__':
+    main()

@@ -1,0 +1,18 @@
+
+
+# Generated development files
+__pycache__/
+*.py[cod]
+.venv/
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+
+bin/
+obj/
+*.exe
+wyniki_tsp.txt
+
+wyniki_tsp_csharp_run.txt

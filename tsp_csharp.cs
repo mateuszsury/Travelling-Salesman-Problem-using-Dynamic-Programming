@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,15 +24,15 @@ class Program
     static Tuple<int, List<int>> TspDynamicProgramming(List<List<int>> distances)
     {
         int n = distances.Count;
-        int[,] memo = new int[1 << n, n];
+        var memo = new Dictionary<(int Mask, int Last), Tuple<int, List<int>>>();
 
         Tuple<int, List<int>> TspDpHelper(int mask, int last)
         {
             if (mask == (1 << n) - 1)
                 return new Tuple<int, List<int>>(distances[last][0], new List<int> { last, 0 });
 
-            if (memo[mask, last] != 0)
-                return new Tuple<int, List<int>>(memo[mask, last], new List<int>());
+            if (memo.TryGetValue((mask, last), out var cached))
+                return cached;
 
             int minCost = int.MaxValue;
             List<int> bestPath = new List<int>();
@@ -52,7 +52,7 @@ class Program
                 }
             }
 
-            memo[mask, last] = minCost;
+            memo[(mask, last)] = new Tuple<int, List<int>>(minCost, bestPath);
             return new Tuple<int, List<int>>(minCost, bestPath);
         }
 
@@ -62,17 +62,17 @@ class Program
 
     static void TspRandMultiple(int start, int end)
     {
-        using (StreamWriter file = new StreamWriter("wyniki_tsp_csharp.txt"))
+        using (StreamWriter file = new StreamWriter("wyniki_tsp_csharp_run.txt"))
         {
             for (int n = start + 1; n < end + 1; n++)
             {
                 var data = new List<List<int>>(n);
+                uint seed = (uint)n;
                 for (int a = 0; a < n; a++)
                 {
                     var row = new List<int>(n);
                     for (int b = 0; b < n; b++)
                     {
-                        uint seed = (uint)((a + 1) * (b + 1));
                         seed = ((seed * 69069) + 1u) & 0xFFFFFFFFu;
                         int d = ((int)(seed % 99) + 1) * (a != b ? 1 : 0);
                         row.Add(d);
@@ -110,8 +110,20 @@ class Program
         }
     }
 
-    static void Main()
+    static void Main(string[] args)
     {
-        TspRandMultiple(10, 21);
+        if (args.Contains("--self-test"))
+        {
+            var matrix = new List<List<int>> {
+                new() {0,10,15,20}, new() {10,0,35,25},
+                new() {15,35,0,30}, new() {20,25,30,0}
+            };
+            var (cost, path) = TspDynamicProgramming(matrix);
+            if (cost != 80 || path.Count != 5 || path[0] != 0 || path[^1] != 0 || path.Take(4).Distinct().Count() != 4)
+                throw new InvalidOperationException("TSP cost or route regression");
+            Console.WriteLine("TSP self-test: PASS");
+            return;
+        }
+        TspRandMultiple(3, 10);
     }
 }

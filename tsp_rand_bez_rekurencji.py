@@ -1,6 +1,6 @@
 # def tsp_nearest_neighbor(distances):
 #     num_cities = len(distances)
-#     unvisited_cities = set(range(num_cities))
+#     unvisited_cities = set(range(1, num_cities))
 #     current_city = 0
 #     tour = [current_city]
 
@@ -18,7 +18,7 @@
 def tsp_rand(size, seed):   # wykorzystanie algorytmu nearest neighbour
     print("data:", size)
     distances = [[0] * size for _ in range(size)]   # macierz odleglosci miedzy miastami
-    
+
     for a in range(size):   # generowanie odleglosci miedzy miastami
         for b in range(size):
             seed = (seed * 69069 + 1) & 0xFFFFFFFF
@@ -29,7 +29,7 @@ def tsp_rand(size, seed):   # wykorzystanie algorytmu nearest neighbour
     print()
 
     num_cities = len(distances)
-    unvisited_cities = set(range(num_cities))
+    unvisited_cities = set(range(1, num_cities))
     current_city = 0    # poczatek trasy
     tour = [current_city]
 
@@ -40,11 +40,11 @@ def tsp_rand(size, seed):   # wykorzystanie algorytmu nearest neighbour
         current_city = nearest_city # aktualizacja ostanio dodanego miasta do trasy
 
     tour.append(tour[0])    # dodanie miasta poczatkowego aby zamknąc trasę
-    
-    print("Najkrótsza trasa:", tour)
+
+    print("Trasa heurystyczna:", tour)
     print()
 
 
-# Przykładowe użycie:
-for n in range(10, 21):
-    tsp_rand(n, n)
+if __name__ == '__main__':
+    for n in range(10, 21):
+        tsp_rand(n, n)

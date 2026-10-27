@@ -24,3 +24,19 @@ scripts and may use different input generation. Regenerate matched inputs and
 record runtime, versions and hardware before making performance comparisons.
 
 Generated binaries belong in release assets; build output is ignored. MIT license.
+
+## Project overview
+
+Educational Held-Karp implementations with seeded matrices and route validation.
+
+![Traveling Salesman: Python + C# — The example is computed from a small published matrix. Runtime and memory grow exponentially with the number of cities.](docs/assets/presentation/overview.svg)
+
+The example is computed from a small published matrix. Runtime and memory grow exponentially with the number of cities.
+
+### Computed example
+
+![Reproducible computed example](docs/assets/presentation/tour-example.svg)
+
+Computed by `tsp_dynamic_programming` for the four-city matrix in `test_tsp.py`. The closed tour costs 80. The drawing is schematic; edge weights come from the matrix, not geometric distance.
+
+Regenerate with `python docs/assets/presentation/render_example.py` after installing the optional plotting dependency `matplotlib` and `numpy`. The source data is stored beside the plot.
